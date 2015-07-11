@@ -1,0 +1,14 @@
+Gem::Specification.new do |s|
+  s.name        = 'deis_client'
+  s.version     = '1.5.0.dev1'
+  s.date        = '2015-07-11'
+  s.summary     = "Client library to communicate with a (Deis)[http://deis.io/] Controller"
+  s.description = "(Deis)[http://deis.io/] is an open source application platform for public and private clouds.
+  This gem makes it easy to communicate with a Deis controller programmatically
+  via the (Deis controller api)[http://docs.deis.io/en/latest/reference/api-v1.5/]"
+  s.authors     = ["Franz Liedke", "Cornelius Bock"]
+  s.files       = ["lib/deis_client.rb"]
+  s.homepage    =
+    'https://github.com/franzliedke/deis-client'
+  s.license       = 'MIT'
+end
