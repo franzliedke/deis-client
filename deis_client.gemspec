@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/franzliedke/deis-client'
   s.license       = 'MIT'
+  s.add_runtime_dependency "httparty", ["~> 0.13"]
 end
