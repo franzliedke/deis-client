@@ -10,6 +10,7 @@ module Deis
 
     @@methods = {
       # method => HTTP-verb, path
+      login: [:post, '/auth/login/']
       apps: [:get, '/apps/'],
       create_app: [:post, '/apps/'],
       delete_app: [:delete, '/apps/%s/'],
@@ -20,10 +21,6 @@ module Deis
 
     def initialize(deis_url)
       self.class.base_uri (deis_url + API_PATH)
-    end
-
-    def login(auth)
-      self.class.post '/auth/login/', auth
     end
 
     def method_missing(method_sym, *arguments, &block)
