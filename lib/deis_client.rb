@@ -47,45 +47,68 @@ module Deis
       end
     end
   end
-end
 
-class DeisClient
-  def initialize(deis_url, username, password)
-    @api_wrapper = Deis::ApiWrapper.new deis_url
-    @headers = {}
-    @auth = {username: username, password: password}
-  end
+  class Client
+    def initialize(deis_url, username, password)
+      @api_wrapper = Deis::ApiWrapper.new deis_url
+      @headers = {}
+      @auth = {username: username, password: password}
+    end
 
-  def login
-    response = self.class.post('/auth/login/', @auth)
+    def login
+      response = @api_wrapper.login @auth
 
-    throw Exeption unless response.code = 200
+      throw Exception unless response.code == 200
 
-    @token = response['token']
-    @headers['Authorization'] = "Token token=\"#{@token}\""
-  end
-
-  def apps
-    get '/apps'
-  end
-
-  protected
-
-  def get(path, retried=false)
-    login unless @token
-    response = self.class.get(path, headers: @headers)
-
-    case response.code
-    when 200
+      @token = response['token']
+      @headers['Authorization'] = "Token token=\"#{@token}\""
       response
-    when 401
-      throw Exception if retried
-      login
-      get path, retried: true
-    when 404
-      nil   # or better an exception?
-    else
-      throw Exception
+    end
+
+    def apps
+      perform :apps
+    end
+
+    def create_app(id)
+      perfrom :create_app, {id: id}
+    end
+
+    def delete_app(id)
+      perform :delete_app, {id: id}
+    end
+
+    def app
+      perform :app, {id: id}
+    end
+
+    def app_logs
+      perform :app_logs, {id: id}
+    end
+
+    protected
+
+    # TODO: use own, meaningful exceptions expecially in this method
+    def perform(method_sym, body={}, try_twice=false)
+      login unless @token
+
+      options = {
+        headers: @headers,
+        body: body
+      }
+      response = @api_wrapper.public_send method_sym, options
+
+      case response.code
+      when 200
+        response
+      when 401    # authentification required
+        throw Exception unless try_twice
+        login
+        perform method_sym, options
+      when 404
+        nil   # or better an exception?
+      else
+        throw Exception
+      end
     end
   end
 end
