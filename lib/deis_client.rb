@@ -68,9 +68,9 @@ module Deis
 
     def create_app(id=nil)
       if id
-        perfrom :create_app, {id: id}
+        perform :create_app, {id: id}
       else
-        perfrom :create_app
+        perform :create_app
       end
     end
 
@@ -99,8 +99,8 @@ module Deis
       response = @api_wrapper.public_send method_sym, options
 
       case response.code
-      when 200
-        response
+      when 200...300
+        response.parsed_response
       when 401    # authentification required
         throw Exception unless try_twice
         login
