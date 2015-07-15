@@ -35,7 +35,15 @@ module Deis
       delete_app: [:delete, '/apps/%s/'],
       app: [:get, '/apps/%s/'],
       app_logs: [:get, '/apps/%s/logs/'],
-      app_run: [:post, '/apps/%s/run/']
+      app_run: [:post, '/apps/%s/run/'],
+      containers: [:get, '/apps/%s/containers/'],
+      config: [:get, '/apps/%s/config'],
+      domains: [:get, '/apps/%s/domains'],
+      builds: [:get, '/apps/%s/builds'],
+      create_build: [:post, '/apps/%s/builds'],
+      releases: [:get, '/apps/%s/releases'],
+      release: [:get, '/apps/%s/releases/%s'],
+      rollback_release: [:post, '/apps/%s/releases/rollback']
     }
 
     def initialize(deis_url, username, password)
