@@ -53,12 +53,12 @@ module Deis
     end
 
     def login
-      response = @api_wrapper.login @auth
+      response = @api_wrapper.login({body: @auth})
 
       throw Exception unless response.code == 200
 
       @token = response['token']
-      @headers['Authorization'] = "Token token=\"#{@token}\""
+      @headers['Authorization'] = "token #{@token}"
       response
     end
 
