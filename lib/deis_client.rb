@@ -99,8 +99,10 @@ module Deis
         headers: @headers,
         body: body
       }
-      response = @http.public_send verb, path, options
+      handle @http.public_send verb, path, options
+    end
 
+    def handle(response)
       case response.code
       when 200...300
         response.parsed_response
