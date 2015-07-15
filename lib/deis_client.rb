@@ -29,7 +29,7 @@ module Deis
       verb, path = @@methods[method_sym]
       options = arguments.length == 0 ? {} : arguments[0]
 
-      path = path % options[:id] if path.include?('%s')
+      path = path % options[:body][:id] if path.include?('%s')
       perform_request verb, path, options, &block
     end
 
