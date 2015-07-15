@@ -86,6 +86,42 @@ module Deis
       perform :app_logs, {id: id}
     end
 
+    def app_run(id, command)
+      perform :app_run, {id: id, command: command}
+    end
+
+    def containers(app_id)
+      perform :containers, {id: app_id}
+    end
+
+    def config(app_id)
+      perform :config, {id: app_id}
+    end
+
+    def domains(app_id)
+      perform :domains, {id: app_id}
+    end
+
+    def builds(app_id)
+      perform :builds, {id: app_id}
+    end
+
+    def create_build(app_id, image)
+      perform :create_build, {id: app_id, image: image}
+    end
+
+    def releases(app_id)
+      perform :releases, {id: app_id}
+    end
+
+    def release(app_id, release)
+      perform :releases, {id: app_id, release: release}
+    end
+
+    def rollback_release(app_id, release)
+      perform :rollback_release, {id: app_id, release: release}
+    end
+
     protected
 
     # TODO: use own, meaningful exceptions expecially in this method
