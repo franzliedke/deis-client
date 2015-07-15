@@ -8,6 +8,25 @@ module Deis
 
     API_PATH = '/v1'
 
+    def initialize(deis_url)
+      @base_uri = deis_url + API_PATH
+      # self.class.base_uri (deis_url + API_PATH)
+    end
+
+    def get(path, options)
+      self.class.get(@base_uri + path, options)
+    end
+
+    def post(path, options)
+      self.class.post(@base_uri + path, options)
+    end
+
+    def delete(path, options)
+      self.class.delete(@base_uri + path, options)
+    end
+  end
+
+  class Client
     @@methods = {
       # method => HTTP-verb, path
       login: [:post, '/auth/login/'],
@@ -19,33 +38,6 @@ module Deis
       app_run: [:post, '/apps/%s/run/']
     }
 
-    def initialize(deis_url)
-      self.class.base_uri (deis_url + API_PATH)
-    end
-
-    def method_missing(method_sym, *arguments, &block)
-      super unless @@methods.has_key? method_sym
-
-      verb, path = @@methods[method_sym]
-      options = arguments.length == 0 ? {} : arguments[0]
-
-      path = path % options[:body][:id] if path.include?('%s')
-      perform_request verb, path, options, &block
-    end
-
-    def perform_request(verb, path, options, &block)
-      case verb
-      when :get
-        self.class.get path, options, &block
-      when :post
-        self.class.post path, options, &block
-      when :delete
-        self.class.delete path, options, &block
-      end
-    end
-  end
-
-  class Client
     def initialize(deis_url, username, password)
       @api_wrapper = Deis::ApiWrapper.new deis_url
       @headers = {}
@@ -53,7 +45,7 @@ module Deis
     end
 
     def login
-      response = @api_wrapper.login({body: @auth})
+      response = @api_wrapper.post('/auth/login/', {body: @auth})
 
       throw Exception unless response.code == 200
 
@@ -89,14 +81,17 @@ module Deis
     protected
 
     # TODO: use own, meaningful exceptions expecially in this method
-    def perform(method_sym, body={}, try_twice=false)
+    def perform(method_sym, body={}, try_twice=true)
       login unless @token
+
+      verb, path = @@methods[method_sym]
+      path = path % body[:id] if path.include?('%s')
 
       options = {
         headers: @headers,
         body: body
       }
-      response = @api_wrapper.public_send method_sym, options
+      response = @api_wrapper.public_send verb, path, options
 
       case response.code
       when 200...300
@@ -104,7 +99,7 @@ module Deis
       when 401    # authentification required
         throw Exception unless try_twice
         login
-        perform method_sym, options
+        perform method_sym, options, false
       when 404
         nil   # or better an exception?
       else
