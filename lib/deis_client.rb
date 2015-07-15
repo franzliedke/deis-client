@@ -35,17 +35,25 @@ module Deis
       delete_app: [:delete, '/apps/:app/'],
       app: [:get, '/apps/:app/'],
       app_logs: [:get, '/apps/:app/logs/'],
-      app_run: [:post, '/apps/:app/run/']
+      app_run: [:post, '/apps/:app/run/'],
+      containers: [:get, '/apps/:app/containers/'],
+      config: [:get, '/apps/:app/config'],
+      domains: [:get, '/apps/:app/domains'],
+      builds: [:get, '/apps/:app/builds'],
+      create_build: [:post, '/apps/:app/builds'],
+      releases: [:get, '/apps/:app/releases'],
+      release: [:get, '/apps/:app/releases/:release'],
+      rollback_release: [:post, '/apps/:app/releases/rollback']
     }
 
     def initialize(deis_url, username, password)
-      @api_wrapper = Deis::ApiWrapper.new deis_url
+      @http = Deis::ApiWrapper.new deis_url
       @headers = {}
       @auth = {username: username, password: password}
     end
 
     def login
-      response = @api_wrapper.post('/auth/login/', {body: @auth})
+      response = @http.post('/auth/login/', {body: @auth})
 
       throw Exception unless response.code == 200
 
@@ -78,6 +86,42 @@ module Deis
       perform :app_logs, {app: id}
     end
 
+    def app_run(id, command)
+      perform :app_run, {app: id, command: command}
+    end
+
+    def containers(app_id)
+      perform :containers, {app: app_id}
+    end
+
+    def config(app_id)
+      perform :config, {app: app_id}
+    end
+
+    def domains(app_id)
+      perform :domains, {app: app_id}
+    end
+
+    def builds(app_id)
+      perform :builds, {app: app_id}
+    end
+
+    def create_build(app_id, image)
+      perform :create_build, {app: app_id, image: image}
+    end
+
+    def releases(app_id)
+      perform :releases, {app: app_id}
+    end
+
+    def release(app_id, release)
+      perform :releases, {app: app_id, release: release}
+    end
+
+    def rollback_release(app_id, release)
+      perform :rollback_release, {app: app_id, release: release}
+    end
+
     protected
 
     # TODO: use own, meaningful exceptions expecially in this method
@@ -91,8 +135,10 @@ module Deis
         headers: @headers,
         body: body
       }
-      response = @api_wrapper.public_send verb, path, options
+      handle @http.public_send verb, path, options
+    end
 
+    def handle(response)
       case response.code
       when 200...300
         response.parsed_response
