@@ -47,13 +47,13 @@ module Deis
     }
 
     def initialize(deis_url, username, password)
-      @api_wrapper = Deis::ApiWrapper.new deis_url
+      @http = Deis::ApiWrapper.new deis_url
       @headers = {}
       @auth = {username: username, password: password}
     end
 
     def login
-      response = @api_wrapper.post('/auth/login/', {body: @auth})
+      response = @http.post('/auth/login/', {body: @auth})
 
       throw Exception unless response.code == 200
 
@@ -99,7 +99,7 @@ module Deis
         headers: @headers,
         body: body
       }
-      response = @api_wrapper.public_send verb, path, options
+      response = @http.public_send verb, path, options
 
       case response.code
       when 200...300
