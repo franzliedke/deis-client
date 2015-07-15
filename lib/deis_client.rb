@@ -10,7 +10,7 @@ module Deis
 
     @@methods = {
       # method => HTTP-verb, path
-      login: [:post, '/auth/login/']
+      login: [:post, '/auth/login/'],
       apps: [:get, '/apps/'],
       create_app: [:post, '/apps/'],
       delete_app: [:delete, '/apps/%s/'],
@@ -29,7 +29,7 @@ module Deis
       verb, path = @@methods[method_sym]
       options = arguments.length == 0 ? {} : arguments[0]
 
-      path = path % options[:id] if '%s' in path
+      path = path % options[:id] if path.include?('%s')
       perform_request verb, path, options, &block
     end
 
