@@ -32,10 +32,10 @@ module Deis
       login: [:post, '/auth/login/'],
       apps: [:get, '/apps/'],
       create_app: [:post, '/apps/'],
-      delete_app: [:delete, '/apps/%s/'],
-      app: [:get, '/apps/%s/'],
-      app_logs: [:get, '/apps/%s/logs/'],
-      app_run: [:post, '/apps/%s/run/']
+      delete_app: [:delete, '/apps/:app/'],
+      app: [:get, '/apps/:app/'],
+      app_logs: [:get, '/apps/:app/logs/'],
+      app_run: [:post, '/apps/:app/run/']
     }
 
     def initialize(deis_url, username, password)
@@ -60,22 +60,22 @@ module Deis
 
     def create_app(id=nil)
       if id
-        perform :create_app, {id: id}
+        perform :create_app, {app: id}
       else
         perform :create_app
       end
     end
 
     def delete_app(id)
-      perform :delete_app, {id: id}
+      perform :delete_app, {app: id}
     end
 
     def app(id)
-      perform :app, {id: id}
+      perform :app, {app: id}
     end
 
     def app_logs(id)
-      perform :app_logs, {id: id}
+      perform :app_logs, {app: id}
     end
 
     protected
@@ -85,7 +85,7 @@ module Deis
       login unless @token
 
       verb, path = @@methods[method_sym]
-      path = path % body[:id] if path.include?('%s')
+      path = interpolate_path(path, body)
 
       options = {
         headers: @headers,
@@ -105,6 +105,18 @@ module Deis
       else
         throw Exception
       end
+    end
+
+    def interpolate_path(path, body)
+      match = /\/:(?<key>\w+)\/?/.match(path)
+      return path unless match
+
+      key = match[:key]
+      value = body[key.to_sym]
+      path[':' + key] = value
+
+      # this catched only one occurance of an key, so call recursively until nothing is found anymore
+      interpolate_path path, body
     end
   end
 end
