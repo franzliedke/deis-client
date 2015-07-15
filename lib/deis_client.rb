@@ -154,10 +154,9 @@ module Deis
     end
 
     def interpolate_path(path, body)
-      match = /\/:(?<key>\w+)\/?/.match(path)
-      return path unless match
+      /\/:(?<key>\w+)\/?/ =~ path
+      return path unless key
 
-      key = match[:key]
       value = body[key.to_sym]
       path[':' + key] = value
 
