@@ -15,8 +15,8 @@ module Deis
       create_app: [:post, '/apps/'],
       delete_app: [:delete, '/apps/%s/'],
       app: [:get, '/apps/%s/'],
-      app_logs: [:get, '/apps/%s/logs'],
-      app_run: [:post, '/apps/%s/run']
+      app_logs: [:get, '/apps/%s/logs/'],
+      app_run: [:post, '/apps/%s/run/']
     }
 
     def initialize(deis_url)
@@ -66,19 +66,23 @@ module Deis
       perform :apps
     end
 
-    def create_app(id)
-      perfrom :create_app, {id: id}
+    def create_app(id=nil)
+      if id
+        perfrom :create_app, {id: id}
+      else
+        perfrom :create_app
+      end
     end
 
     def delete_app(id)
       perform :delete_app, {id: id}
     end
 
-    def app
+    def app(id)
       perform :app, {id: id}
     end
 
-    def app_logs
+    def app_logs(id)
       perform :app_logs, {id: id}
     end
 
