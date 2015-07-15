@@ -9,16 +9,16 @@ The following API endpoints are not yet implemented: (bold entries have priority
 
 - [ ] Authorization
   - [ ] register new user
-  - [ ] **login**
+  - [x] **login**
   - [ ] cancel account
   - [ ] regenerate token
   - [ ] change password
 - [ ] Applications
-  - [ ] **list all applications**
-  - [ ] **create an application**
-  - [ ] **destroy an application**
-  - [ ] **list application details**
-  - [ ] retrieve application logs
+  - [x] **list all applications**
+  - [x] **create an application**
+  - [x] **destroy an application**
+  - [x] **list application details**
+  - [x] retrieve application logs
   - [ ] run on-off commands
 - [ ] Certificates
   - [ ] list all certificates
