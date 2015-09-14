@@ -135,21 +135,21 @@ module Deis
         headers: @headers,
         body: body
       }
-      handle @http.public_send verb, path, options
+      handle @http.public_send(verb, path, options), try_twice
     end
 
-    def handle(response)
+    def handle(response, try_twice)
       case response.code
       when 200...300
         response.parsed_response
       when 401    # authentification required
-        throw Exception unless try_twice
+        raise Exception unless try_twice
         login
         perform method_sym, options, false
       when 404
         nil   # or better an exception?
       else
-        throw Exception
+        raise Exception
       end
     end
 
