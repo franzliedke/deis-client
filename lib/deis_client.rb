@@ -68,7 +68,7 @@ module Deis
 
     def create_app(id=nil)
       if id
-        perform :create_app, {app: id}
+        perform :create_app, {id: id}
       else
         perform :create_app
       end
