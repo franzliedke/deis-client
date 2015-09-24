@@ -2,6 +2,8 @@ require 'httparty'
 
 module Deis
   class Error < StandardError
+    attr_reader :status, :message, :data
+
     def initialize(http_status = nil, message = nil, data = nil)
       @status = http_status
       @message = message
