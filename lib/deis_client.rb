@@ -30,20 +30,20 @@ module Deis
     @@methods = {
       # method => HTTP-verb, path
       login: [:post, '/auth/login/'],
-      apps: [:get, '/apps/'],
+      apps: [:get, '/apps'],
       create_app: [:post, '/apps/'],
       delete_app: [:delete, '/apps/:app/'],
       app: [:get, '/apps/:app/'],
       app_logs: [:get, '/apps/:app/logs/'],
       app_run: [:post, '/apps/:app/run/'],
       containers: [:get, '/apps/:app/containers/'],
-      config: [:get, '/apps/:app/config'],
-      domains: [:get, '/apps/:app/domains'],
-      builds: [:get, '/apps/:app/builds'],
-      create_build: [:post, '/apps/:app/builds'],
-      releases: [:get, '/apps/:app/releases'],
-      release: [:get, '/apps/:app/releases/:release'],
-      rollback_release: [:post, '/apps/:app/releases/rollback']
+      config: [:get, '/apps/:app/config/'],
+      domains: [:get, '/apps/:app/domains/'],
+      builds: [:get, '/apps/:app/builds/'],
+      create_build: [:post, '/apps/:app/builds/'],
+      releases: [:get, '/apps/:app/releases/'],
+      release: [:get, '/apps/:app/releases/:release/'],
+      rollback_release: [:post, '/apps/:app/releases/rollback/']
     }
 
     def initialize(deis_url, username, password)
