@@ -1,6 +1,32 @@
 require 'httparty'
 
 module Deis
+  class Error < StandardError
+    def initialize(http_status = nil, message = nil, data = nil)
+      @status = http_status
+      @message = message
+      @data = data
+    end
+  end
+
+  class ClientError < Error; end
+
+  class ServerError < Error; end
+
+  # the following two errors are just convenience for better rescuing
+  class AuthorizationError < ClientError
+    def initialize(message = nil, data = nil)
+      super(401, message, data)
+    end
+  end
+
+  class NotFound < ClientError
+    def initialize(message = nil, data = nil)
+      super(404, message, data)
+    end
+  end
+
+
   class ApiWrapper
     include HTTParty
     format :json
@@ -55,7 +81,7 @@ module Deis
     def login
       response = @http.post('/auth/login/', {body: @auth})
 
-      throw Exception unless response.code == 200
+      raise AuthorizationError.new unless response.code == 200
 
       @token = response['token']
       @headers['Authorization'] = "token #{@token}"
@@ -124,7 +150,6 @@ module Deis
 
     protected
 
-    # TODO: use own, meaningful exceptions expecially in this method
     def perform(method_sym, body={}, try_twice=true)
       login unless @token
 
@@ -143,13 +168,17 @@ module Deis
       when 200...300
         response.parsed_response
       when 401    # authentification required
-        raise Exception unless try_twice
+        raise AuthorizationError.new unless try_twice
         login
         perform method_sym, options, false
       when 404
-        nil   # or better an exception?
+        raise NotFound
+      when 400...500
+        raise ClientError.new response.code, response.message, response: response
+      when 500...600
+        raise ServerError.new response.code, response.message, response: response
       else
-        raise Exception
+        raise Error.new response.code, response.message, response: response
       end
     end
 
