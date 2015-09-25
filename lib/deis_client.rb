@@ -65,6 +65,7 @@ module Deis
       app_logs: [:get, '/apps/:app/logs/'],
       app_run: [:post, '/apps/:app/run/'],
       containers: [:get, '/apps/:app/containers/'],
+      scale: [:get, '/apps/:app/scale/'],
       config: [:get, '/apps/:app/config/'],
       domains: [:get, '/apps/:app/domains/'],
       builds: [:get, '/apps/:app/builds/'],
@@ -120,6 +121,10 @@ module Deis
 
     def containers(app_id)
       perform :containers, {app: app_id}
+    end
+
+    def scale(app_id, type_number_hash)
+      perform :containers, type_number_hash.merge({app: app_id})
     end
 
     def config(app_id)
@@ -185,7 +190,7 @@ module Deis
     end
 
     def interpolate_path(path, body)
-      /\/:(?<key>\w+)\/?/ =~ path
+      %r{/:(?<key>\w+)/?} =~ path
       return path unless key
 
       value = body[key.to_sym]

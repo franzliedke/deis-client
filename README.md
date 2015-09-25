@@ -31,7 +31,7 @@ The following API endpoints are not yet implemented: (bold entries have priority
   - [ ] restart all containers
   - [ ] restart containers by type
   - [ ] restart containers by type and number
-  - [ ] scale containers
+  - [x] scale containers
 - [ ] Configuration
   - [x] **list application configuration**
   - [ ] create new config
