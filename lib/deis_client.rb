@@ -124,7 +124,7 @@ module Deis
     end
 
     def scale(app_id, type_number_hash)
-      perform :containers, type_number_hash.merge({app: app_id})
+      perform :scale, type_number_hash.merge({app: app_id})
     end
 
     def config(app_id)
