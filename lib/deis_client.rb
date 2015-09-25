@@ -65,7 +65,7 @@ module Deis
       app_logs: [:get, '/apps/:app/logs/'],
       app_run: [:post, '/apps/:app/run/'],
       containers: [:get, '/apps/:app/containers/'],
-      scale: [:get, '/apps/:app/scale/'],
+      scale: [:post, '/apps/:app/scale/'],
       config: [:get, '/apps/:app/config/'],
       domains: [:get, '/apps/:app/domains/'],
       builds: [:get, '/apps/:app/builds/'],
