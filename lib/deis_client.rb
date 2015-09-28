@@ -157,7 +157,7 @@ module Deis
 
     protected
 
-    def perform(method_sym, body={}, try_twice=true)
+    def perform(method_sym, body = {}, try_twice = true)
       login unless @token
 
       verb, path = @@methods[method_sym]
@@ -167,19 +167,23 @@ module Deis
         headers: @headers,
         body: body
       }
-      handle @http.public_send(verb, path, options), try_twice
+      begin
+        handle @http.public_send(verb, path, options)
+      rescue AuthorizationError => e
+        raise e unless try_twice
+        login
+        perform method_sym, body, false
+      end
     end
 
-    def handle(response, try_twice)
+    def handle(response)
       case response.code
       when 200...300
         response.parsed_response
-      when 401    # authentification required
-        raise AuthorizationError.new unless try_twice
-        login
-        perform method_sym, options, false
+      when 401
+        raise AuthorizationError.new
       when 404
-        raise NotFound
+        raise NotFound.new
       when 400...500
         raise ClientError.new response.code, response.message, response: response
       when 500...600
