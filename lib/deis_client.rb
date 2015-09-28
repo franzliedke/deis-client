@@ -77,7 +77,7 @@ module Deis
 
     def initialize(deis_url, username, password)
       @http = Deis::ApiWrapper.new deis_url
-      @headers = {}
+      @headers = {'Content-Type' => 'application/json'}
       @auth = { username: username, password: password }
     end
 
@@ -166,7 +166,7 @@ module Deis
 
       options = {
         headers: @headers,
-        body: body
+        body: body.to_json
       }
 
       begin
