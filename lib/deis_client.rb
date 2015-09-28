@@ -67,6 +67,7 @@ module Deis
       containers: [:get, '/apps/:app/containers/'],
       scale: [:post, '/apps/:app/scale/'],
       config: [:get, '/apps/:app/config/'],
+      set_config: [:post, '/apps/:app/config/'],
       domains: [:get, '/apps/:app/domains/'],
       builds: [:get, '/apps/:app/builds/'],
       create_build: [:post, '/apps/:app/builds/'],
@@ -130,6 +131,10 @@ module Deis
 
     def config(app_id)
       perform :config, app: app_id
+    end
+
+    def set_config(app_id, values)
+      perform :set_config, { app: app_id }, values: values
     end
 
     def domains(app_id)

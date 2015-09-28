@@ -13,7 +13,7 @@ The following API endpoints are not yet implemented: (bold entries have priority
   - [ ] cancel account
   - [ ] regenerate token
   - [ ] change password
-- [ ] Applications
+- [x] Applications
   - [x] **list all applications**
   - [x] **create an application**
   - [x] **destroy an application**
@@ -32,18 +32,18 @@ The following API endpoints are not yet implemented: (bold entries have priority
   - [ ] restart containers by type
   - [ ] restart containers by type and number
   - [x] scale containers
-- [ ] Configuration
+- [x] Configuration
   - [x] **list application configuration**
-  - [ ] create new config
-  - [ ] unset config variable
+  - [x] create new config
+  - [x] unset config variable
 - [ ] Domains
   - [x] **list application domains**
   - [ ] add domain
   - [ ] remove domain
-- [ ] Builds
+- [x] Builds
   - [x] **list application builds**
   - [x] **create application build**
-- [ ] Releases
+- [x] Releases
   - [x] **list application releases**
   - [x] **list release details**
   - [x] **rollback release**
