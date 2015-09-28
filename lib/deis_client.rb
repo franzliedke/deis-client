@@ -78,11 +78,12 @@ module Deis
     def initialize(deis_url, username, password)
       @http = Deis::ApiWrapper.new deis_url
       @headers = {}
-      @auth = {username: username, password: password}
+      @auth = { username: username, password: password }
     end
 
     def login
-      response = @http.post('/auth/login/', {body: @auth})
+      verb, path = @@methods[:login]
+      response = @http.public_send(verb, path, body: @auth)
 
       raise AuthorizationError.new unless response.code == 200
 
@@ -95,84 +96,85 @@ module Deis
       perform :apps
     end
 
-    def create_app(id=nil)
+    def create_app(id = nil)
       if id
-        perform :create_app, {id: id}
+        perform :create_app, {}, id: id
       else
         perform :create_app
       end
     end
 
     def delete_app(id)
-      perform :delete_app, {app: id}
+      perform :delete_app, app: id
     end
 
     def app(id)
-      perform :app, {app: id}
+      perform :app, app: id
     end
 
     def app_logs(id)
-      perform :app_logs, {app: id}
+      perform :app_logs, app: id
     end
 
     def app_run(id, command)
-      perform :app_run, {app: id, command: command}
+      perform :app_run, { app: id }, command: command
     end
 
     def containers(app_id)
-      perform :containers, {app: app_id}
+      perform :containers, app: app_id
     end
 
     def scale(app_id, type_number_hash)
-      perform :scale, type_number_hash.merge({app: app_id})
+      perform :scale, { app: app_id }, type_number_hash
     end
 
     def config(app_id)
-      perform :config, {app: app_id}
+      perform :config, app: app_id
     end
 
     def domains(app_id)
-      perform :domains, {app: app_id}
+      perform :domains, app: app_id
     end
 
     def builds(app_id)
-      perform :builds, {app: app_id}
+      perform :builds, app: app_id
     end
 
     def create_build(app_id, image)
-      perform :create_build, {app: app_id, image: image}
+      perform :create_build, { app: app_id }, image: image
     end
 
     def releases(app_id)
-      perform :releases, {app: app_id}
+      perform :releases, app: app_id
     end
 
     def release(app_id, release)
-      perform :releases, {app: app_id, release: release}
+      perform :releases, app: app_id, release: release
     end
 
     def rollback_release(app_id, release)
-      perform :rollback_release, {app: app_id, release: release}
+      perform :rollback_release, { app: app_id }, release: release
     end
 
     protected
 
-    def perform(method_sym, body = {}, try_twice = true)
+    def perform(method_sym, interpolations = {}, body = {}, try_twice = true)
       login unless @token
 
       verb, path = @@methods[method_sym]
-      path = interpolate_path(path, body)
+      path = interpolate_path(path, interpolations)
 
       options = {
         headers: @headers,
         body: body
       }
+
       begin
         handle @http.public_send(verb, path, options)
       rescue AuthorizationError => e
         raise e unless try_twice
         login
-        perform method_sym, body, false
+        handle @http.public_send(verb, path, options)
       end
     end
 
@@ -193,15 +195,15 @@ module Deis
       end
     end
 
-    def interpolate_path(path, body)
+    def interpolate_path(path, interpolations)
       %r{/:(?<key>\w+)/?} =~ path
       return path unless key
 
-      value = body[key.to_sym]
+      value = interpolations[key.to_sym]
       path[':' + key] = value
 
       # this catched only one occurance of an key, so call recursively until nothing is found anymore
-      interpolate_path path, body
+      interpolate_path path, interpolations
     end
   end
 end
