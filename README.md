@@ -36,10 +36,10 @@ The following API endpoints are not yet implemented: (bold entries have priority
   - [x] **list application configuration**
   - [x] create new config
   - [x] unset config variable
-- [ ] Domains
+- [x] Domains
   - [x] **list application domains**
-  - [ ] add domain
-  - [ ] remove domain
+  - [x] add domain
+  - [x] remove domain
 - [x] Builds
   - [x] **list application builds**
   - [x] **create application build**

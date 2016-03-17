@@ -69,6 +69,8 @@ module Deis
       config: [:get, '/apps/:app/config/'],
       set_config: [:post, '/apps/:app/config/'],
       domains: [:get, '/apps/:app/domains/'],
+      add_domain: [:post, '/apps/:app/domains/'],
+      remove_domain: [:delete, '/apps/:app/domains/:domain'],
       builds: [:get, '/apps/:app/builds/'],
       create_build: [:post, '/apps/:app/builds/'],
       releases: [:get, '/apps/:app/releases/'],
@@ -139,6 +141,14 @@ module Deis
 
     def domains(app_id)
       perform :domains, app: app_id
+    end
+
+    def add_domain(app_id, domain)
+      perform :add_domain, { app: app_id }, domain: domain
+    end
+
+    def remove_domain(app_id, domain)
+      perform :remove_domain, { app: app_id, domain: domain }
     end
 
     def builds(app_id)
