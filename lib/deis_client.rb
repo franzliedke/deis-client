@@ -177,7 +177,9 @@ module Deis
       login unless @token
 
       verb, path = @@methods[method_sym]
-      path = interpolate_path(path, interpolations)
+      # Interpolate path modifies the path instead of only returning the new one.
+      #   hence we duplicate it so the original is never modified.
+      path = interpolate_path(path.dup, interpolations)
 
       options = {
         headers: @headers,
