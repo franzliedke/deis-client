@@ -1,5 +1,7 @@
 # deis-client
 
+[![Gem Version](https://badge.fury.io/rb/deis_client.svg)](https://badge.fury.io/rb/deis_client)
+
 A Ruby client library for [Deis](http://docs.deis.io/) controllers
 
 ## Implementation Status
