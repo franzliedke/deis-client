@@ -65,6 +65,7 @@ module Deis
       app_logs: [:get, '/apps/:app/logs/'],
       app_run: [:post, '/apps/:app/run/'],
       containers: [:get, '/apps/:app/containers/'],
+      containers_by_type: [:get, '/apps/:app/containers/:type/'],
       restart_containers: [:post, '/apps/:app/containers/restart/'],
       restart_containers_by_type: [:post, '/apps/:app/containers/:type/restart/'],
       restart_container: [:post, '/apps/:app/containers/:type/:number/restart'],
@@ -126,8 +127,12 @@ module Deis
       perform :app_run, { app: id }, command: command
     end
 
-    def containers(app_id)
-      perform :containers, app: app_id
+    def containers(app_id, opts = {})
+      if opts[:type]
+        perform :containers_by_type, app: app_id, type: opts[:type]
+      else
+        perform :containers, app: app_id
+      end
     end
 
     def restart_containers(app_id, opts = {})

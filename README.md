@@ -25,9 +25,9 @@ The following API endpoints are not yet implemented: (bold entries have priority
   - [ ] list certificate details
   - [ ] create certificate
   - [ ] destroy a certificate
-- [ ] Containers
+- [x] Containers
   - [x] **list all containers**
-  - [ ] list all containers by type
+  - [x] list all containers by type
   - [x] restart all containers
   - [x] restart containers by type
   - [x] restart containers by type and number
