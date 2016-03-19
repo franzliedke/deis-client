@@ -65,6 +65,9 @@ module Deis
       app_logs: [:get, '/apps/:app/logs/'],
       app_run: [:post, '/apps/:app/run/'],
       containers: [:get, '/apps/:app/containers/'],
+      restart_containers: [:post, '/apps/:app/containers/restart/'],
+      restart_containers_by_type: [:post, '/apps/:app/containers/:type/restart/'],
+      restart_container: [:post, '/apps/:app/containers/:type/:number/restart'],
       scale: [:post, '/apps/:app/scale/'],
       config: [:get, '/apps/:app/config/'],
       set_config: [:post, '/apps/:app/config/'],
@@ -125,6 +128,18 @@ module Deis
 
     def containers(app_id)
       perform :containers, app: app_id
+    end
+
+    def restart_containers(app_id, opts = {})
+      if opts[:type]
+        if opts[:number]
+          perform :restart_container, opts.merge(app: app_id)
+        else
+          perform :restart_containers_by_type, app: app_id, type: opts[:type]
+        end
+      else
+        perform :restart_containers, app: app_id
+      end
     end
 
     def scale(app_id, type_number_hash)

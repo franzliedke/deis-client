@@ -28,9 +28,9 @@ The following API endpoints are not yet implemented: (bold entries have priority
 - [ ] Containers
   - [x] **list all containers**
   - [ ] list all containers by type
-  - [ ] restart all containers
-  - [ ] restart containers by type
-  - [ ] restart containers by type and number
+  - [x] restart all containers
+  - [x] restart containers by type
+  - [x] restart containers by type and number
   - [x] scale containers
 - [x] Configuration
   - [x] **list application configuration**
