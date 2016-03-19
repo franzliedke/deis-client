@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'deis_client'
-  s.version     = '1.5.2'
+  s.version     = '1.5.3'
   s.date        = Date.today.to_s
   s.summary     = "Client library to communicate with a [Deis](http://deis.io/) Controller"
   s.description = "[Deis](http://deis.io/) is an open source application platform for public and private clouds.
