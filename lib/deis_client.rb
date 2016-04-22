@@ -58,6 +58,7 @@ module Deis
     @@methods = {
       # method => HTTP-verb, path
       login: [:post, '/auth/login/'],
+      change_password: [:post, '/auth/passwd/'],
       apps: [:get, '/apps'],
       create_app: [:post, '/apps/'],
       delete_app: [:delete, '/apps/:app/'],
@@ -97,6 +98,17 @@ module Deis
       @token = response['token']
       @headers['Authorization'] = "token #{@token}"
       response
+    end
+
+    def change_password(old, new, opts = {})
+      body = {
+        password: old,
+        new_password: new
+      }
+
+      body[:username] = opts[:username] if opts[:username]
+
+      perform :change_password, {}, body
     end
 
     def apps

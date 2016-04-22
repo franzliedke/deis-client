@@ -14,7 +14,7 @@ The following API endpoints are already implemented:
   - [x] login
   - [ ] cancel account
   - [ ] regenerate token
-  - [ ] change password
+  - [x] change password
 - [x] Applications
   - [x] list all applications
   - [x] create an application
