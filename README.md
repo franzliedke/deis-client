@@ -25,7 +25,7 @@ The following API endpoints are already implemented:
 - [ ] Certificates
   - [ ] list all certificates
   - [ ] list certificate details
-  - [ ] create certificate
+  - [x] create certificate
   - [ ] destroy a certificate
 - [x] Containers
   - [x] list all containers

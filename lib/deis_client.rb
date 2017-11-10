@@ -80,7 +80,8 @@ module Deis
       create_build: [:post, '/apps/:app/builds/'],
       releases: [:get, '/apps/:app/releases/'],
       release: [:get, '/apps/:app/releases/:release/'],
-      rollback_release: [:post, '/apps/:app/releases/rollback/']
+      rollback_release: [:post, '/apps/:app/releases/rollback/'],
+      certs_create: [:post, '/certs']
     }
 
     def initialize(deis_url, username, password)
@@ -201,6 +202,10 @@ module Deis
 
     def rollback_release(app_id, release)
       perform :rollback_release, { app: app_id }, release: release
+    end
+
+    def certs_create(certificate, key, name = nil)
+      perform :certs_create, { certificate: certificate, key: key, common_name: name}
     end
 
     protected
