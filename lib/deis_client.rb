@@ -81,10 +81,10 @@ module Deis
       releases: [:get, '/apps/:app/releases/'],
       release: [:get, '/apps/:app/releases/:release/'],
       rollback_release: [:post, '/apps/:app/releases/rollback/'],
-      certs_create: [:post, '/certs/'],
-      certs_delete: [:delete, '/certs/:domain'],
-      certs_list: [:get, '/certs'],
-      cert_details: [:get, '/certs/:domain']
+      create_cert: [:post, '/certs/'],
+      delete_cert: [:delete, '/certs/:domain'],
+      certs: [:get, '/certs'],
+      cert: [:get, '/certs/:domain']
     }
 
     def initialize(deis_url, username, password)
@@ -207,24 +207,24 @@ module Deis
       perform :rollback_release, { app: app_id }, release: release
     end
 
-    def certs_create(certificate, key, name = nil)
+    def create_cert(certificate, key, name = nil)
       if name.nil?
-        perform :certs_create, { }, { certificate: certificate, key: key }
+        perform :create_cert, { }, { certificate: certificate, key: key }
       else
-        perform :certs_create, { }, { certificate: certificate, key: key, common_name: name }
+        perform :create_cert, { }, { certificate: certificate, key: key, common_name: name }
       end
     end
 
-    def certs_remove(domain)
-      perform :certs_remove, { domain: domain }
+    def delete_cert(domain)
+      perform :delete_cert, { domain: domain }
     end
 
-    def certs_list
-      perform :certs_list
+    def certs
+      perform :certs
     end
 
-    def cert_details(domain)
-      perform :cert_details, { domain: domain }
+    def cert(domain)
+      perform :cert, { domain: domain }
     end
 
     protected
