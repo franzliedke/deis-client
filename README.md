@@ -22,11 +22,11 @@ The following API endpoints are already implemented:
   - [x] list application details
   - [x] retrieve application logs
   - [x] run on-off commands
-- [ ] Certificates
-  - [ ] list all certificates
-  - [ ] list certificate details
-  - [ ] create certificate
-  - [ ] destroy a certificate
+- [x] Certificates
+  - [x] list all certificates
+  - [x] list certificate details
+  - [x] create certificate
+  - [x] destroy a certificate
 - [x] Containers
   - [x] list all containers
   - [x] list all containers by type
